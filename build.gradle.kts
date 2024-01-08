@@ -17,7 +17,7 @@ dependencies {
     implementation("org.jsoup:jsoup:1.15.1")
 
     //Twitter連携
-    implementation("io.github.redouane59.twitter:twittered:2.16")
+    implementation("io.github.redouane59.twitter:twittered:2.23")
 
     //Log
     implementation("ch.qos.logback", "logback-classic", "1.2.8")
