@@ -52,9 +52,9 @@ class BoothNewProductTweetBot {
      */
     private fun task() {
         try {
+            val elementIds = getElementIds()
             //要素を確認する
-            getElementIds()
-                .filter { !catch.contains(it) } //キャッシュに含まれているのを除去
+            elementIds.filter { !catch.contains(it) } //キャッシュに含まれているのを除去
                 .forEach { id ->
                     //キャシュに追加
                     catch.add(id)
@@ -74,6 +74,15 @@ class BoothNewProductTweetBot {
                         Thread.sleep(10000)
                     }
                 }
+
+            //キャッシュのサイズを確認
+            if (catch.size >= 100) {
+                //削除
+                catch.clear()
+                //キャッシュに追加
+                catch.addAll(elementIds)
+            }
+
         } catch (e: Exception) {
             if (e !is TimeoutException) e.printStackTrace()
         }
