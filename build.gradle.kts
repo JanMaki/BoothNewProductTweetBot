@@ -14,7 +14,7 @@ repositories {
 dependencies {
 
     //JSoup
-    implementation("org.jsoup:jsoup:1.15.1")
+    implementation("org.jsoup:jsoup:1.17.2")
 
     //Twitter連携
     implementation("io.github.redouane59.twitter:twittered:2.23")
