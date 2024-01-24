@@ -4,7 +4,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-group = "dev.simpletimer.murder_mystery_notice"
+group = "dev.simpletimer.booth_new_product_tweet_bot"
 version = "1.0.0"
 
 repositories {
