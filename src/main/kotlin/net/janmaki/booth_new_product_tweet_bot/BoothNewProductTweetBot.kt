@@ -120,6 +120,9 @@ class BoothNewProductTweetBot {
             baseUrlBuilder.append("tags%5B%5D=${tags.joinToString("+")}")
         }
 
+        //並び順を新着に
+        baseUrlBuilder.append("&sort=new")
+
         println(baseUrlBuilder)
 
         return baseUrlBuilder.toString()
