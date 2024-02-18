@@ -4,7 +4,7 @@ FROM gradle AS compile
 WORKDIR /app
 COPY . .
 
-RUN ./gradlew shadowJar -i
+RUN gradle wrapper && chmod +x ./gradlew && ./gradlew shadowJar -i
 
 
 
