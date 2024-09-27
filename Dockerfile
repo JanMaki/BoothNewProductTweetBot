@@ -1,5 +1,5 @@
 #コンパイル
-FROM gradle AS compile
+FROM gradle:jdk17 AS compile
 
 WORKDIR /app
 COPY . .
