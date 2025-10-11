@@ -115,9 +115,13 @@ class BoothNewProductTweetBot {
         }
         if (exceptWords.isNotEmpty()) {
             baseUrlBuilder.append("except_words%5B%5D=${exceptWords.joinToString("+")}")
+            if (tags.isNotEmpty()) baseUrlBuilder.append("&")
         }
         if (tags.isNotEmpty()) {
-            baseUrlBuilder.append("tags%5B%5D=${tags.joinToString("+")}")
+            for ((index, tag) in tags.withIndex()) {
+                baseUrlBuilder.append("tags%5B%5D=${tag}")
+                if (index < tags.size - 1) baseUrlBuilder.append("&")
+            }
         }
 
         //並び順を新着に
