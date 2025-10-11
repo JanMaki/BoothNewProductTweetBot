@@ -1,18 +1,12 @@
-#コンパイル
-FROM gradle:jdk17 AS compile
+FROM gradle:jdk21 AS build
 
 WORKDIR /app
 COPY . .
+RUN gradle wrapper && ./gradlew shadowJar -i --stacktrace
 
-RUN gradle wrapper && chmod +x ./gradlew && ./gradlew shadowJar -i
-
-
-
-#Botを起動
-FROM amazoncorretto:17 AS bot
+FROM amazoncorretto:21-alpine3.22 AS app
 
 WORKDIR /app
+COPY --from=build /app/build/libs .
 
-COPY --from=compile /app/build/libs .
-
-CMD ["java", "-jar", "BoothNewProductTweetBot-1.0.0-all.jar"]
+CMD ["java", "-jar", "BoothNewProductTweetBot.jar"]

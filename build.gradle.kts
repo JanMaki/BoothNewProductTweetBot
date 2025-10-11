@@ -1,11 +1,11 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
-    kotlin("jvm") version "1.9.22"
-
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    kotlin("jvm") version "2.2.0"
+    application
+    id("com.gradleup.shadow") version "9.1.0"
 }
-
-group = "dev.simpletimer.booth_new_product_tweet_bot"
-version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -24,14 +24,31 @@ dependencies {
 
 }
 
-val jar by tasks.getting(Jar::class) {
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+kotlin {
+    jvmToolchain(21)
+}
+
+application {
+    mainClass.set("net.janmaki.booth_new_product_tweet_bot.BoothNewProductTweetBotKt")
+}
+
+tasks.shadowJar {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    mergeServiceFiles()
+    archiveClassifier.set("")
     manifest {
-        attributes["Main-Class"] = "net.janmaki.booth_new_product_tweet_bot.BoothNewProductTweetBotKt"
+        attributes["Main-Class"] = application.mainClass.get()
     }
+}
 
-    from(configurations.runtimeClasspath.get().map {
-        if (it.isDirectory) it else zipTree(it)
-    })
-
-    exclude("META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA")
+tasks.withType<KotlinCompile> {
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict")
+        jvmTarget.set(JvmTarget.JVM_21)
+    }
 }
