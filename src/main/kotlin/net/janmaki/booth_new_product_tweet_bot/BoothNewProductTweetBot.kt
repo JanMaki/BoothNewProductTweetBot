@@ -25,6 +25,7 @@ class BoothNewProductTweetBot {
     private val exceptWords: List<String> =
         System.getenv("SearchExceptWord")?.split(",")?.map { it.trim() } ?: mutableListOf()
     private val tags: List<String> = System.getenv("SearchTag")?.split(",")?.map { it.trim() } ?: mutableListOf()
+    private val category: String? = System.getenv("BrowseCategory")
 
     //クールタイム
     private val coolTime = System.getenv("BoothSearchCoolTime")?.toLongOrNull() ?: 30000L
@@ -108,15 +109,34 @@ class BoothNewProductTweetBot {
      */
     private fun createUrl(): String {
         val baseUrlBuilder = StringBuilder("https://booth.pm/ja/")
-        if (keyword != null) {
-            baseUrlBuilder.append("search/items?")
+        // カテゴリ、検索ワードの設定よってパスが変わる
+        if (category != null) {
+            // browse?p=keyword
+            baseUrlBuilder.append("browse/${category}?")
+            if (keyword != null) {
+                baseUrlBuilder.append("?p=${keyword}")
+                // 続きがある場合は&をくっつける
+                if (exceptWords.isNotEmpty() || tags.isNotEmpty()) baseUrlBuilder.append("&")
+            }
         } else {
-            baseUrlBuilder.append("items?")
+            if (keyword != null) {
+                // search/keyword?
+                baseUrlBuilder.append("search/${keyword}?")
+            } else {
+                // items?
+                baseUrlBuilder.append("items?")
+            }
         }
+
+        // 除外ワード
         if (exceptWords.isNotEmpty()) {
             baseUrlBuilder.append("except_words%5B%5D=${exceptWords.joinToString("+")}")
+
+            // 続きがある場合は&をくっつける
             if (tags.isNotEmpty()) baseUrlBuilder.append("&")
         }
+
+        // タグ
         if (tags.isNotEmpty()) {
             for ((index, tag) in tags.withIndex()) {
                 baseUrlBuilder.append("tags%5B%5D=${tag}")
